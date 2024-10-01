@@ -1,0 +1,551 @@
+type Value__2 = 
+ variant {
+   Array: vec ValueShared;
+   Blob: blob;
+   Int: int;
+   Map: vec record {
+              text;
+              ValueShared;
+            };
+   Nat: nat;
+   Text: text;
+ };
+type Value__1 = 
+ variant {
+   Array: vec Value__1;
+   Blob: blob;
+   Int: int;
+   Map: vec record {
+              text;
+              Value__1;
+            };
+   Nat: nat;
+   Text: text;
+ };
+type ValueShared = 
+ variant {
+   Array: vec ValueShared;
+   Blob: blob;
+   Int: int;
+   Map: vec record {
+              text;
+              ValueShared;
+            };
+   Nat: nat;
+   Text: text;
+ };
+type Value = 
+ variant {
+   Array: vec Value;
+   Blob: blob;
+   Int: int;
+   Map: vec record {
+              text;
+              Value;
+            };
+   Nat: nat;
+   Text: text;
+ };
+type TransactionID = nat;
+type Transaction = 
+ variant {
+   Array: vec Value;
+   Blob: blob;
+   Int: int;
+   Map: vec record {
+              text;
+              Value;
+            };
+   Nat: nat;
+   Text: text;
+ };
+type Token = 
+ service {
+   auto_init: () -> ();
+   getLedger: () -> (vec Value__2) query;
+   icrc104_apply_rules: (ApplyRuleRequest) -> (ApplyRuleResult);
+   icrc75_get_list_lists: (List__2, opt List__2, opt nat) ->
+    (vec List__2) query;
+   icrc75_get_list_members_admin: (List__2, opt ListItem__2, opt nat) ->
+    (vec ListItem__2) query;
+   icrc75_get_list_permissions_admin: (List__2, opt Permission__1,
+    opt PermissionListItem__1, opt nat) -> (PermissionList__1) query;
+   icrc75_get_lists: (opt text, bool, opt List__2, opt nat) ->
+    (vec ListRecord) query;
+   icrc75_is_member: (vec AuthorizedRequestItem) -> (vec bool) query;
+   icrc75_manage: (ManageRequest) -> (ManageResponse);
+   icrc75_manage_list_membership: (ManageListMembershipRequest) ->
+    (ManageListMembershipResponse);
+   icrc75_manage_list_properties: (ManageListPropertyRequest) ->
+    (ManageListPropertyResponse);
+   icrc75_member_of: (ListItem__2, opt List__2, opt nat) ->
+    (vec List__2) query;
+   icrc75_metadata: () -> (DataItemMap__1) query;
+   icrc75_request_token: (ListItem__2, List__2, opt nat) ->
+    (IdentityRequestResult);
+   icrc75_retrieve_token: (IdentityToken) -> (IdentityCertificate) query;
+   validateApplyRule: (ApplyRuleRequest) -> (SNSValidationResponse);
+ };
+type Subaccount__1 = blob;
+type Subaccount = blob;
+type SNSValidationResponse = 
+ variant {
+   Err: text;
+   Ok: text;
+ };
+type RuleSetNamespace = text;
+type PropertyShared__1 = 
+ record {
+   immutable: bool;
+   name: text;
+   value: DataItem__1;
+ };
+type PropertyShared = 
+ record {
+   immutable: bool;
+   name: text;
+   value: CandyShared;
+ };
+type Permission__2 = 
+ variant {
+   Admin;
+   Permissions;
+   Read;
+   Write;
+ };
+type Permission__1 = 
+ variant {
+   Admin;
+   Permissions;
+   Read;
+   Write;
+ };
+type PermissionList__1 = vec PermissionListItem__2;
+type PermissionListItem__2 = 
+ record {
+   Permission__2;
+   ListItem__1;
+ };
+type PermissionListItem__1 = 
+ record {
+   Permission__2;
+   ListItem__1;
+ };
+type PermissionListItem = 
+ record {
+   Permission;
+   ListItem;
+ };
+type PermissionList = vec PermissionListItem;
+type Permission = 
+ variant {
+   Admin;
+   Permissions;
+   Read;
+   Write;
+ };
+type NamespaceRecordShared = 
+ record {
+   members: vec ListItem;
+   metadata: ICRC16Map;
+   namespace: text;
+   permissions: PermissionList;
+ };
+type ManageResultError = 
+ variant {
+   Other: text;
+   TooManyRequests;
+   Unauthorized;
+ };
+type ManageResult = 
+ opt variant {
+       Err: ManageResultError;
+       Ok;
+     };
+type ManageResponse = vec ManageResult;
+type ManageRequestItem = 
+ variant {
+   UpdateDefaultTake: nat;
+   UpdateMaxTake: nat;
+   UpdatePermittedDrift: nat;
+   UpdateTxWindow: nat;
+ };
+type ManageRequest = vec ManageRequestItem;
+type ManageListPropertyResult = 
+ opt variant {
+       Err: ManageListPropertyError;
+       Ok: TransactionID;
+     };
+type ManageListPropertyResponse = vec ManageListPropertyResult;
+type ManageListPropertyRequestItem = 
+ record {
+   action: ManageListPropertyRequestAction;
+   created_at_time: opt nat;
+   from_subaccount: opt Subaccount__1;
+   list: List__1;
+   memo: opt blob;
+ };
+type ManageListPropertyRequestAction = 
+ variant {
+   ChangePermissions:
+    variant {
+      Admin: variant {
+               Add: ListItem__1;
+               Remove: ListItem__1;
+             };
+      Permissions: variant {
+                     Add: ListItem__1;
+                     Remove: ListItem__1;
+                   };
+      Read: variant {
+              Add: ListItem__1;
+              Remove: ListItem__1;
+            };
+      Write: variant {
+               Add: ListItem__1;
+               Remove: ListItem__1;
+             };
+    };
+   Create:
+    record {
+      admin: opt ListItem__1;
+      members: vec ListItem__1;
+      metadata: DataItemMap;
+    };
+   Delete;
+   Metadata: record {
+               key: text;
+               value: opt DataItem__1;
+             };
+   Rename: text;
+ };
+type ManageListPropertyRequest = vec ManageListPropertyRequestItem;
+type ManageListPropertyError = 
+ variant {
+   Exists;
+   IllegalAdmin;
+   IllegalPermission;
+   NotFound;
+   Other: text;
+   TooManyRequests;
+   Unauthorized;
+ };
+type ManageListMembershipResult = 
+ opt variant {
+       Err: ManageListMembershipError;
+       Ok: TransactionID;
+     };
+type ManageListMembershipResponse = vec ManageListMembershipResult;
+type ManageListMembershipRequestItem = 
+ record {
+   action: ManageListMembershipAction;
+   created_at_time: opt nat;
+   from_subaccount: opt Subaccount__1;
+   list: List__1;
+   memo: opt blob;
+ };
+type ManageListMembershipRequest = vec ManageListMembershipRequestItem;
+type ManageListMembershipError = 
+ variant {
+   Exists;
+   NotFound;
+   Other: text;
+   TooManyRequests;
+   Unauthorized;
+ };
+type ManageListMembershipAction = 
+ variant {
+   Add: ListItem__1;
+   Remove: ListItem__1;
+ };
+type List__2 = text;
+type List__1 = text;
+type ListRecord = 
+ record {
+   list: List__1;
+   metadata: opt DataItemMap;
+ };
+type ListItem__2 = 
+ variant {
+   Account: Account;
+   DataItem: DataItem;
+   Identity: Identity;
+   List: List;
+ };
+type ListItem__1 = 
+ variant {
+   Account: Account__1;
+   DataItem: DataItem__1;
+   Identity: Identity__1;
+   List: List__1;
+ };
+type ListItem = 
+ variant {
+   Account: Account;
+   DataItem: DataItem;
+   Identity: Identity;
+   List: List;
+ };
+type List = text;
+type InitArgs__1 = 
+ opt
+  record {
+    certificateNonce: opt nat;
+    cycleShareTimerID: opt nat;
+    existingNamespaces: opt vec NamespaceRecordShared;
+  };
+type InitArgs = 
+ opt
+  record {
+    admins: opt vec principal;
+    callStats: opt vec record {
+                         text;
+                         vec record {
+                               text;
+                               nat;
+                             };
+                       };
+    local_transactions: vec Transaction;
+  };
+type Identity__1 = principal;
+type IdentityToken__1 = 
+ variant {
+   Array: vec Value__1;
+   Blob: blob;
+   Int: int;
+   Map: vec record {
+              text;
+              Value__1;
+            };
+   Nat: nat;
+   Text: text;
+ };
+type IdentityToken = 
+ variant {
+   Array: vec Value__1;
+   Blob: blob;
+   Int: int;
+   Map: vec record {
+              text;
+              Value__1;
+            };
+   Nat: nat;
+   Text: text;
+ };
+type IdentityRequestResult = 
+ variant {
+   Err: IdentityRequestError;
+   Ok: IdentityToken__1;
+ };
+type IdentityRequestError = 
+ variant {
+   ExpirationError;
+   NotAMember;
+   NotFound;
+   Other: text;
+ };
+type IdentityCertificate = 
+ record {
+   certificate: blob;
+   token: IdentityToken__1;
+   witness: blob;
+ };
+type Identity = principal;
+type ICRC75Change = 
+ record {
+   changes: vec ChangeDetail;
+   icrc75Canister: principal;
+   list: text;
+ };
+type ICRC16MapItem = 
+ record {
+   text;
+   DataItem;
+ };
+type ICRC16Map = vec ICRC16MapItem;
+type DataItem__1 = 
+ variant {
+   Array: vec DataItem__1;
+   Blob: blob;
+   Bool: bool;
+   Bytes: vec nat8;
+   Class: vec PropertyShared__1;
+   Float: float64;
+   Floats: vec float64;
+   Int: int;
+   Int16: int16;
+   Int32: int32;
+   Int64: int64;
+   Int8: int8;
+   Ints: vec int;
+   Map: DataItemMap;
+   Nat: nat;
+   Nat16: nat16;
+   Nat32: nat32;
+   Nat64: nat64;
+   Nat8: nat8;
+   Nats: vec nat;
+   Option: opt DataItem__1;
+   Principal: principal;
+   Set: vec DataItem__1;
+   Text: text;
+   ValueMap: vec record {
+                   DataItem__1;
+                   DataItem__1;
+                 };
+ };
+type DataItemMap__1 = 
+ vec record {
+       text;
+       DataItem__1;
+     };
+type DataItemMap = 
+ vec record {
+       text;
+       DataItem__1;
+     };
+type DataItem = 
+ variant {
+   Array: vec CandyShared;
+   Blob: blob;
+   Bool: bool;
+   Bytes: vec nat8;
+   Class: vec PropertyShared;
+   Float: float64;
+   Floats: vec float64;
+   Int: int;
+   Int16: int16;
+   Int32: int32;
+   Int64: int64;
+   Int8: int8;
+   Ints: vec int;
+   Map: vec record {
+              text;
+              CandyShared;
+            };
+   Nat: nat;
+   Nat16: nat16;
+   Nat32: nat32;
+   Nat64: nat64;
+   Nat8: nat8;
+   Nats: vec nat;
+   Option: opt CandyShared;
+   Principal: principal;
+   Set: vec CandyShared;
+   Text: text;
+   ValueMap: vec record {
+                   CandyShared;
+                   CandyShared;
+                 };
+ };
+type ChangeDetail = 
+ variant {
+   AddedMember: ListItem__1;
+   AddedPermission: record {
+                      Permission: Permission__2;
+                      member: ListItem__1;
+                    };
+   ChangeListName: record {
+                     newName: List__1;
+                     oldName: List__1;
+                   };
+   CreateList: List__1;
+   DeleteList: List__1;
+   RemovedMember: ListItem__1;
+   RemovedPermission: record {
+                        Permission: Permission__2;
+                        member: ListItem__1;
+                      };
+   UpdateMetadata: record {
+                     path: text;
+                     value: opt DataItem__1;
+                   };
+ };
+type CandyShared = 
+ variant {
+   Array: vec CandyShared;
+   Blob: blob;
+   Bool: bool;
+   Bytes: vec nat8;
+   Class: vec PropertyShared;
+   Float: float64;
+   Floats: vec float64;
+   Int: int;
+   Int16: int16;
+   Int32: int32;
+   Int64: int64;
+   Int8: int8;
+   Ints: vec int;
+   Map: vec record {
+              text;
+              CandyShared;
+            };
+   Nat: nat;
+   Nat16: nat16;
+   Nat32: nat32;
+   Nat64: nat64;
+   Nat8: nat8;
+   Nats: vec nat;
+   Option: opt CandyShared;
+   Principal: principal;
+   Set: vec CandyShared;
+   Text: text;
+   ValueMap: vec record {
+                   CandyShared;
+                   CandyShared;
+                 };
+ };
+type AuthorizedRequestItem = 
+ record {
+   ListItem__1;
+   vec vec List__1;
+ };
+type ApplyRuleResult = 
+ variant {
+   Err: ApplyError;
+   Ok:
+    variant {
+      ICRC75Changes:
+       record {
+         changes: vec ICRC75Change;
+         metadata: DataItemMap;
+       };
+      LocalTrx: record {
+                  metadata: DataItemMap;
+                  transactions: vec nat;
+                };
+      RemoteTrx: record {
+                   metadata: DataItemMap;
+                   transactions: vec nat;
+                 };
+    };
+ };
+type ApplyRuleRequest = 
+ record {
+   icrc75Canister: principal;
+   members: vec ListItem__1;
+   metadata: opt DataItemMap;
+   rule_namespace: RuleSetNamespace;
+   target_list: List__1;
+ };
+type ApplyError = 
+ variant {
+   ExecutionFailed: text;
+   InvalidRuleSetFormat: text;
+   RuleSetNotFound;
+   Unauthorized;
+ };
+type Account__1 = 
+ record {
+   owner: principal;
+   subaccount: opt Subaccount__1;
+ };
+type Account = 
+ record {
+   owner: principal;
+   subaccount: opt Subaccount;
+ };
+service : (opt record {
+                 icrc104: InitArgs;
+                 icrc75: InitArgs__1;
+               }) -> Token

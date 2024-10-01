@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    // enable latest features
+    
+    "lib": ["DOM", "DOM.Iterable","ESNext"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "allowJs": true, // allow importing `.js` from `.ts`
+    "types": ["jest", "node"],
+
+    // Bundler mode
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    // Best practices
+    "strict": true,
+    "skipLibCheck": true,
+
+    "noFallthroughCasesInSwitch": true,
+
+    // Some stricter flags
+    "useUnknownInCatchVariables": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./pic/**/*.ts",
+    "./pic/global-setup.ts",
+    "./pic/global-teardown.ts",
+    "./pic/types.d.ts"
+  ]
+}

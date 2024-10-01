@@ -1,0 +1,15 @@
+{
+    "version": 1,
+    "canisters": {
+        "rolerotator": {
+            "type": "motoko",
+            "main": "src/example.mo"
+        }
+    },
+    "defaults": {
+        "build": {
+            "packtool": "mops sources",
+            "args": ""
+        }
+    }
+}
