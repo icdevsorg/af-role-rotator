@@ -4,6 +4,13 @@
         "rolerotator": {
             "type": "motoko",
             "main": "src/example.mo"
+        },
+        "king" : {
+            "args" : "--incremental-gc --release",
+            "type": "motoko",
+            "gzip": true,
+            "main": "src/king.mo"
+            
         }
     },
     "defaults": {
